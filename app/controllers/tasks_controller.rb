@@ -1,8 +1,8 @@
 class TasksController < ApplicationController
-
+  before_action :require_user_logged_in
   def index
       @tasks = Task.all
-  end
+  end 
 
   def show
       @task = Task.find(params[:id])
@@ -16,11 +16,12 @@ class TasksController < ApplicationController
 
       @task = Task.new(task_params)
 
-
+    @task = current_user.tasks.build(task_params)
     if @task.save
       flash[:success] = 'Task が正常に投稿されました'
-      redirect_to @task
+      redirect_to root_url
     else
+    
       flash.now[:danger] = 'Task が投稿されませんでした'
       render :new
     end
