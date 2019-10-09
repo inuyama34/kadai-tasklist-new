@@ -1,8 +1,10 @@
 class TasksController < ApplicationController
   before_action :require_user_logged_in
   def index
-      @tasks = Task.all
-  end 
+     if logged_in?
+      @tasks = current_user.tasks.order(id: :desc).page(params[:page])
+     end
+  end
 
   def show
       @task = Task.find(params[:id])
